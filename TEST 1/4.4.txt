@@ -1,0 +1,18 @@
+From one of the properties of covariance taught in the class:
+
+Cov[X+Y, Z+W] = Cov[X,Z] + Cov[X,W] + Cov[Y,Z] + Cov[Y,W]
+
+We can also apply it here:
+
+Cov[A+B, A-B] = Cov[A,A] - Cov[A,B] + Cov[A,B] - Cov[B,B]
+Cov[A+B, A-B] = Cov[A,A] - Cov[B,B]
+Cov[A+B, A-B] = V(A) - V(B)
+              = 0
+
+We know that the covariance is 0.
+
+And from the definition 2.2.5, correlation is a rescaled derivative of covariance that capture the linear dependence between two random variables,
+
+p[X,Y] = Cov[X,Y] / sigma[X]*sigma[Y]
+
+If we plug Cov[S,D] which is 0, we can tell that correlation is 0 meaning they are uncorrelated.

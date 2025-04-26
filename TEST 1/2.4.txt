@@ -1,0 +1,25 @@
+Cov(X,Y) = E[XY] - E[X]E[Y]
+
+Since we kno that E[XY] = 3/5, we just need to find E[X] and E[Y]:
+
+E[X] = ∫(0 to 1) x * (∫(0 to 2) f(x,y) dy) dx
+
+Given the joint PDF f(x,y) = 3/10 * (2 - x^2)y
+E[X] = ∫(0 to 1) x * (∫(0 to 2) 3/10 * (2 - x^2) y dy) dx
+E[X] = ∫(0 to 1) x * (3/10 * (2 - x^2) * ∫(0 to 2) y dy) dx
+E[X] = ∫(0 to 1) x * (3/10 * (2 - x^2) * y^2/2|(0,2)) dx
+E[X] = ∫(0 to 1) x * (3/10 * (2 - X^2) * 2) DX
+E[X] = 3/5 * ∫(0 to 1) (2x - x^3) dx
+E[X] = 3/5 * (x^2 - x^4/4)|(0,1)
+E[X] = 3/5 * (1 - 1/4)
+E[X] = 9/20
+
+Given the marginal PDF of Y, fY(y), is y/2
+E[Y] = ∫(0 to 2) y * y/2 dy
+E[Y] = ∫(0 to 2) y^2/2 dy
+E[Y] = 1/4 * y^3|(0,2)
+E[Y] = 2
+
+So from Cov(X,Y) = E[XY] - E[X]E[Y],
+Cov(X,Y) = 3/5 - 9/20 * 2
+Cov(X,Y) = -3/10

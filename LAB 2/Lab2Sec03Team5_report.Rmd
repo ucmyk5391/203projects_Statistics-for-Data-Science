@@ -1,0 +1,193 @@
+---
+title: "ABV Effect on Beer Ratings"
+author: 'Lab 2: Moonsoo Kim, Saurabh Pattarkine, Ben Michaels'
+output:
+  pdf_document:
+    latex_engine: xelatex
+geometry: "margin=1.3cm"    
+header-includes:
+  \usepackage{wrapfig}
+  \usepackage{float}
+  \usepackage{graphicx}
+  \floatplacement{figure}{H}
+---
+
+```{r load packages and set options, include=FALSE}
+library(tidyverse)
+library(magrittr)
+library(stargazer)
+library(reshape2)
+library(sandwich)
+library(lmtest)
+library(ggplot2)
+library(tibble)
+library(knitr)
+library(xtable)
+
+theme_set(theme_bw())
+options(tinytex.verbose = TRUE)
+knitr::opts_chunk$set(echo=FALSE, message=FALSE)
+```
+
+
+
+```{r load data, include = FALSE}
+#load dataset
+beer <- read_csv('../data/external/beer_profile_and_ratings.csv', show_col_types = FALSE)
+
+#restrict to abv less than 15
+beer <- beer %>%
+  filter(ABV <= 15.0)
+
+#create derived variables
+beer$ABVSquared <- beer$ABV^2
+
+#rename variables to eliminate spaces
+beer <- rename(beer, ibuMin = `Min IBU`)
+beer <- rename(beer, ibuMax = `Max IBU`)
+
+#split into exploration and confirmation dfs
+set.seed(123) 
+exploration_rows <- sample(1:nrow(beer), size = 0.30*nrow(beer))
+
+exploration_df <- beer[exploration_rows, ]
+confirmation_df <- beer[-exploration_rows, ]
+
+
+model_basic <- lm(review_overall ~ ABV + ABVSquared, data = confirmation_df)
+model_2 <- lm(review_overall ~ ABV + ABVSquared + ibuMin + ibuMax, data =confirmation_df)
+model_3 <- lm(review_overall ~ ABV + ABVSquared + Body + Bitter + Fruits + ibuMin + ibuMax, data = confirmation_df)
+
+```
+## Introduction 
+The 2022 United States beer market was valued at 115 billion dollar with a 6% dollar growth in the craft beer section.  While beer consumption overall has decreased, craft beer market share and annual production continues to increase.  In addition, overall brewery counts continue to increase annually yet the number of annual breweries closing are rapidly approaching the number opening \footnote{Brewers Association. "National Beer Sales and Production Data" (2022)}.  
+
+This changing yet promising market has been shown to be influenced by beer rating applications which allow users to rate consumed beers via their mobile device or via a web site.  The number of users and reviews from these apps has increased annually and a positive correlation between sale price and ratings has been demonstrated in previous literature\footnote{Pozner, J.-E., DeSoucey, M., Verhaal, J. C.,and Sikavica, K. (2022). Watered Down: Market Growth, Authenticity, and Evaluation in Craft Beer. Organization Studies, 43(3), 321-345.},\footnote{Michis, A. A. (2023). Hedonic decomposition of beer prices: Consumer ratings and quantity discounts. International Journal of Food and Agribusiness Marketing, 35(4), 443-462.}.  
+
+This study aims to explore the relationship between ABV (X) and overall consumer review scores (Y). Understanding this relationship is essential for breweries to tailor their product offerings to meet consumer expectations, potentially leading to increased sales and market share.  While there are many factors that play into the overall rating of beer, ABV is a measurable and controllable component of the brew. Brewers can manipulate and plan for ABV during the brewing process by modifying ingredients, process, and/or temperatures.  The models constructed in this study will shed light on the nuanced relationship between ABV and consumer ratings, offering actionable insights for breweries seeking to enhance the success of their products.
+
+## Brief Description of the Data
+Our data was downloaded from the "Beer Profile and Rating Set" hosted on Kaggle with credits given to the Beer Tasting Profiles Dataset by sp1222 and the 1.5 Million Beer Reviews by Tanya Cashorali.  The units of observation are unique beers, each contributing data on ABV, beer style, brewery details, and consumer ratings. An exact start and end date of the reviews was not provided and was created from a dataset uploaded in 2017.  The data source was BeerAdvocate user reviews.     
+
+## Operationalization of Key Concepts:
+
+The independent variable (X) in our study is the ABV of beer, operationalized as a flexible function, allowing for potential nonlinear relationships. The dependent variable (Y) is the overall consumer review score, a comprehensive metric of a beer's quality based on consumer evaluations. Alternative variables, such as beer style or brewery size, are considered as potential covariates to address potential confounding.
+
+## Explanation of Key Modeling Decisions:
+All exploration and model building was performed on a 30% subsample of the data.  The remaining 70%, which totaled 2238 beers, was used to generate the statistics in this report. Our next step was to eliminate beers with ABVs greater than 15.0 (n=14).  This decision was made due to our microbreweries inexperience and lack of equipment to brew beers above this threshold.  The brewing process is drastically different to produce beers at this ABV and as we were unable to produce a beer at this ABV, we excluded them from the analysis. 
+\pagebreak
+```{r anova aic build,include=FALSE, echo=FALSE,out.width='\\textwidth'}
+# Linear Model
+linear_model <- lm(review_overall ~ ABV, data = exploration_df)
+# Quadratic Model
+quadratic_model <- lm(review_overall ~ ABV + I(ABV^2), data = exploration_df)
+# Compare models using an ANOVA
+anova_model <- anova(linear_model, quadratic_model)
+#print(anova_model)
+# Alternatively, use AIC for model comparison
+aic <- AIC(linear_model, quadratic_model)
+```
+
+A significant p-value (5.487e-11) in the ANOVA suggests that the quadratic model has a statistically better fit. The linear model (AIC=1135.040) and quadratic model (AIC=1093.886) suggest that the quadratic is a better fit in terms of the trade-off between goodness of fit and model complexity.
+
+```{r anova-aic, comment="", results='asis'}
+cat("\\begin{minipage}{0.5\\linewidth}")
+print(xtable(anova_model, digits = 2), type = "latex", comment = FALSE, floating = FALSE)
+cat("\\end{minipage}\\hfill")
+cat("\\begin{minipage}{0.5\\linewidth}")
+print(xtable(aic, digits = 2), type = "latex", comment = FALSE, floating = FALSE)
+cat("\\end{minipage}")
+```
+
+Figure one shows the relationship between ABV and overall review.  The relationship suggests that overall review initially increases as the ABV increases to about 10, then begins to decrease at higher ABVs.  Based on the quadratic form of ABV vs overall reviews, we created a derived variable (ABVSquared) by squaring the ABV value.
+
+```{r plot abv vs review overall, echo=FALSE,out.width='0.7\\textwidth', fig.align='center',fig.cap="ABV vs Overall Review"}
+par(mar = c(4,4,1,1))
+plot(confirmation_df$ABV, confirmation_df$review_overall, #main = "ABV vs Overall Review",
+     xlab = "ABV", ylab = "Overall Review Score", pch = 20)
+abv_range <- seq(min(confirmation_df$ABV), max(confirmation_df$ABV), length.out = 300)
+lines(abv_range, predict(model_basic, newdata = data.frame(ABV = abv_range,
+      ABVSquared = abv_range^2)), col = "blue")
+```
+
+
+Our basic model consists of the following regression form:
+$$
+  \widehat{OverallReviewAvg}=\beta_0 + \beta_1\cdot (ABV) + \beta_2 \cdot (ABV^2) 
+$$
+\nopagebreak
+
+
+Figure 2 shows calculated correlation coefficients between variables and the Overall Review score:
+
+```{r correlations, echo=FALSE,out.width='0.5\\textwidth', fig.align='center',fig.cap="Correlation with Overall Review"}
+# Select the variables of interest
+variables_of_interest <- c('ABV', 'ibuMin', 'ibuMax', 'Astringency', 'Body', 'Alcohol', 'Bitter','Sweet','Sour','Salty','Fruits','Hoppy','Spices','Malty', 'review_overall')
+
+# Subset the dataframe
+subset_df <- confirmation_df[, variables_of_interest]
+
+# Get the correlation of the variables of interest against review_overall
+correlations <- cor(subset_df)[, 'review_overall']
+correlations_long <- melt(correlations,value.name = "correlation")
+correlations_long <- subset(correlations_long, rownames(correlations_long) != "review_overall")
+#print(correlations_long)
+
+ggplot(correlations_long, aes(x = reorder(rownames(correlations_long), correlation), y = correlation, fill = correlation)) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(label = round(correlation, 2)), hjust = -0.1) +
+  theme_minimal() +
+  labs(x="Variable") + labs(y=NULL) +
+  theme(axis.text.x = element_blank()) +
+  coord_flip() +
+  scale_fill_gradient(low = "red", high = "blue")
+```
+
+
+```{r display regression table, message=FALSE, echo=FALSE, results='asis'}
+stargazer(
+  model_basic, model_2, model_3, 
+  label = "tab:regression",
+   title = "Estimated Regressions",
+  column.sep.width = "-10pt",
+  header = FALSE,
+  star.cutoffs = c(0.05, 0.01, 0.001),
+  omit.stat=c("adj.rsq","f"), 
+  dep.var.caption  = "Output Variable: Average Overall Review",
+  digits=2,
+   notes.append = FALSE,
+  notes = "\\parbox[t]{7cm}{$HC_1$ robust standard errors in parentheses. Body, Bitter, and Fruits variables are review averages for those components.  $ibu Min$ and $ibu Max$ are assigned based on the style of beer.}"
+)
+```
+
+## Results
+
+Table 1 shows the results of three represented regressions.  For all models, ABV was highly statistically significant.  The R2 value increased as more variables were included in each model.  As an example using the basic model, if our micro brewery produced three beers with ABVs of 4,9,and 15 percent, we could expect average ratings of 3.57, 4.08, and 4.02 respectively.  The additional variables we included could also be considered to brew a beer to maximize consumer ratings.  Using the third model, if a brewery were to try and maximize reviews, they would want an ABV in the 9-11 range, use ingredients that increased body, bitter, and fruit scores, and stay closer to the minimum IBU range for the style of beer.  Figure 3 shows the predicted relationship between overall reviews and ABV. 
+
+
+```{r echo=FALSE,fig.cap="ABV vs Predicted Overall Review",out.width='0.6\\textwidth', fig.align='center'}
+# Generate predicted values
+confirmation_df$predicted <- predict(model_basic, newdata = confirmation_df)
+
+# Plot original ABV vs predicted review_overall
+ggplot(confirmation_df, aes(x = ABV, y = predicted)) +
+  geom_line(color = "blue") +
+  labs(x = "ABV", y = "Predicted Overall Review") +
+  
+  theme_minimal()
+```
+
+
+## Limitations
+
+Consistent regression estimates require an assumption of independent and identically distributed (IID) observations.  As beer is distributed and consumed geographically, there is the possibility of geographic clustering based on groups of users rating a beer either higher or lower due to geographic preferences.  
+
+In addition, beer reviews occur over time and could be influenced by prior reviews which are viewable by a user before they submit their own review.  The pharmacodynamics of ethanol create the possibility of a time based effect where reviews increase (or potentially decrease) as more is consumed.  This translates to the possibility of the last, or first, beer being rated higher depending on the effect of ethanol on the user's body.  The dataset did not contain information above the collection time frame and if we were to action this data, we would want a more recent dataset that would reflect current trends and taste preferences.       
+
+There is also the possibility that omitted variables exist in our data.  For example, marketing, bottle/can design, hype, or tradition could all influence the beer ratings left by users.
+
+Last, we did not address the quantity of beer reviews in our analysis.  This could be a separate analysis where the impact of number of reviews is quantified relative to the overall rating.  
+
+## Conclusion
+
+In conclusion, this study demonstrates the relationship between ABV and consumer ratings in the beer market. By addressing the research question, breweries can make informed decisions about product design, contributing to enhanced product success. This can help them build and enhance the product not only with respect to taste but also other factors like feel, texture, aroma etc. The broader implications of the findings are discussed, emphasizing the practical relevance for breweries aiming to navigate the competitive landscape successfully.

@@ -1,0 +1,23 @@
+The Law of Iterated Expectations: E[Y] = E[E[Y|X]]
+
+1. E[Y|X] = X
+
+2. Cov[X, Y] = E[XY] - E[X]E[Y]
+
+3. Cov[X, Y] = E[X^2] - (E[X])^2
+
+Using the Law of Iterated Expectations:
+4. E[Y] = E[E[Y|X]] = E[X]
+
+5. Cov[X, Y] = E[XY] - (E[X])^2
+
+Since E[Y|X] = X, 
+6. E[XY] = E[X]E[Y|X] = XE[X]
+
+7. Cov[X, Y] = XE[X] - (E[X])^2
+
+8. Cov[X, Y] = E[X] * (X - E[X])
+
+9. V[X] = E[X^2] - (E[X])^2
+
+When we look at the formula for Cov[X, Y] and compare it to V[X], we see they are the same. So, if E[Y|X] = X, then Cov[X, Y] is the same as V[X].

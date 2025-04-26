@@ -1,0 +1,1 @@
+From the graph drawn earlier in 4.1, we know that by triangle shape colored in red in the rectangular framework, (0.5,0.5), it's 1/8. And since we need to know P(S > 1/2), only one triangle shape is correct here = 1/8

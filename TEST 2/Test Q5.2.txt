@@ -1,0 +1,15 @@
+1. First computing Cov[\tilde{Y},X]:
+Cov[\tilde{Y},X] = Cov[Y + U_Y,X]
+
+Using the linearity of covariance,
+Cov[\tilde{Y},X] = Cov[Y,X] = Cov[U_Y,X]
+
+And since U_Y is independent of both Y and X, Cov[U_Y,X] = 0, meaning
+Cov[\tilde{Y},X] = Cov[Y,X]
+
+2. Now computing β_\tilde{Y}X:
+β_\tilde{Y}X = Cov[\tilde{Y},X]/V[X]
+β_\tilde{Y}X = Cov[Y,X]/V[X] = β_YX
+
+3. We can say that the slope of BLP of \tilde{Y} is exactly the same as that of Y on X:
+β_\tilde{Y}X = Cov[Y,X]/V[X] = β_YX

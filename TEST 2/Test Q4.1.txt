@@ -1,0 +1,17 @@
+1. A = W|L
+
+2. E[A∣W=w]=E[wL]
+
+3. Because  W is given as a constant w in this conditional expectation, it's no longer a random variable. 
+
+4. L is a random variable that is uniformly distributed over [0,2].
+
+5. E[L] = (0 + 2)/2
+E(L) = 1
+
+6. Since W and L are independent:
+E[wL] = w * E[L]
+
+7. E[A|W = w] = w * 1 = w
+
+8. Therefore, the conditional expectation of A given W is w.

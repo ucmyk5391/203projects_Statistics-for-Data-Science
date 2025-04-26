@@ -1,0 +1,23 @@
+We will first compute the MSE for each scenario:
+
+1. MSE for the BLP of Y given X:
+e_Y = Y - g(X)
+
+Therefore, the MSE is:
+MSE_Y = E[(Y-g(X))^2]
+
+Using the BLP in the theorem 2.2.21 given:
+MSE_Y = E[(Y - α - β_YX * X)^2]
+
+2. MSE for the BLP of \tilde{Y} given X:
+
+Given that β_\tilde{Y}X = β_YX,
+MSE_\tilde{Y} = E[(\tilde{Y} - α - β_YX * X)^2]
+MSE_\tilde{Y} = E[(Y + U_Y - α - β_YX * X)^2]
+MSE_\tilde{Y} = E[(Y - α - β_YX * X)^2] + E[U_Y^2] + 2E[(Y - α - β_YX * X) * U_Y]
+
+3, We know that E[U_Y^2] = V[U_Y] > 0 and the covariance term is 0,
+MSE_\tilde{Y} = E[(Y - α - β_YX * X)^2] + V[U_Y]
+MSE_\tilde{Y} = MSE_Y + V[U_Y]
+
+4. From the question we know that V[U_Y] > 0, it tells us that MSE_\tilde{Y} > MSE_Y, meaning MSE for the BLP of Y given X is definitely smaller than the MSE for the BLOP of \tilde{Y} given X.

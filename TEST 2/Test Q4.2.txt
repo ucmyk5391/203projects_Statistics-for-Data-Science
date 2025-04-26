@@ -1,0 +1,29 @@
+1. Conditional variance of A given W = w:
+V[A|W = w] = E[A^2 | W = w] - (E[A|W = w])^2
+
+2. Since A = W * L,
+A^2 = (W * L)^2 = W^2 * L^2
+
+3. Since W = w,
+A^2 = w^2 * L^2
+
+4. E[w^2 * L^2] = w^2 * E[L^2]
+
+5. For a uniform distributi on [0,2], the expected value of L^2 is:
+E[L^2] = ∫0 to 2 * l^2 * 1/2 * dl
+E[L^2] = 1/2 * ∫0 to 2 * l^2 * dl
+E[L^2] = 1/2 * [l^3/3]0 to 2
+E[L^2] = 1/2 * [2^3/3]
+E[L^2] = 1/2 * 8/3
+E[L^2] = 4/3
+
+6. Substituting this into our equation for E[A^2|W = w]:
+E[w^2 * L^2] = w^2 * 4/3 = 4w^2/3
+
+7. Since we know what E[A|W = w] as w in our Q4.1 we can just square it and we know it's w^2:
+(E[A|W = w])^2 = w^2
+
+8. V[A|W = w] = 4w^2/3 - w^2
+V[A|W = w] = w^2/3
+
+9. Therefore the answer is V[A|W = w] = w^2/3

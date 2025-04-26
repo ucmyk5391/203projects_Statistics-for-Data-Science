@@ -1,0 +1,17 @@
+Derving from Bayes' rule, we know that (P(X|Y) * P(Y)) / P(Y) = (P(Y|X) * P(X)) / P(Y)
+                                       P(X|Y) = (P(Y|X) * P(X)) / P(Y)
+
+So, here if we apply it, (P(A | Y < 1) * P(A)) / P(Y < 1).
+
+And question is if the piece has final length less than 1, what is the conditional probability that it came from machine A.
+
+We know from the drawn graph earlier, A should be in range of (0,2) and B is (0,3).
+
+(P(A | Y < 1) * P(A)) = 1/2 * 1/4 = 1/8
+
+P(Y < 1) from A and B given,
+For A = 1/2 * 1/4 = 1/8
+For B = 1/3 * 3/4 = 1/4
+Now if we add both A and B cases, we get 3/8
+
+Therefore if we divide 1/8 and 3/8, we get 1/3

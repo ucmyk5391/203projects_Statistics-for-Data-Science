@@ -1,0 +1,31 @@
+1. BLP fromula for β_YX and β_Y\tilde{x} are:
+β_YX = Cov[X,Y]/V[X]
+β_Y\tilde{x} = Cov[\tilde{x},Y]/V[\tilde{x}]
+
+2. First computing Cov[\tilde{x},Y]:
+Cov[\tilde{x},Y] = Cov[X + U_X,Y]
+
+3. Using the linearity of covariance and we know that U_X is independent of both X and Y meaning Cov[U_X,Y] = 0:
+Cov[\tilde{x},Y] = Cov[X,Y] + Cov[U_X,Y]
+Cov[\tilde{x},Y] = Cov[X,Y]
+
+4. Now computing V[\tilde{x}]:
+V[\tilde{x}] = V[X + U_X]
+V[\tilde{x}] = V[X] + V[U_X] + 2 * Cov[X,U_X]
+
+6. And again, knowing that U_X is independent of X, Cov[X,U_X] will be 0.
+
+Therefore V[\tilde{x}] = V[X] + V[U_X]
+
+7. Now, all together, computing β_Y\tilde{x}:
+β_Y\tilde{x} = Cov[\tilde{x},Y]/V[\tilde{x}]
+β_Y\tilde{x} = Cov[X,Y]/(V[X]+V[U_X])
+
+And V[U_X] here will be 1/(1+(V[U_X]/V[X]))
+
+Given that V[U_X]/V[X] here is positive, it will be between 0 and 1.
+
+Therefore, β_Y\tilde{x} = β_YX * 1/(1+(V[U_X]/V[X])).
+
+8. We can conclude that since V[U_X]/V[X] is positive, multiplying it with β_YX will be greater than β_Y\tilde{x}
+

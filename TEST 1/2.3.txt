@@ -1,0 +1,19 @@
+E[XY] = E[X]E[Y]
+
+Again given the joint PDF which is f(x,y) = 3/10 * (2 - x^2)y,
+
+since x is between 0 and 1, and y is between 0 and 2, the expected value of XY is:
+
+E[XY] = ∫(0 to 1) ∫(0 to 2) xy * 3/10 * (2 - x^2) * y dy dx
+E[XY] = 3/10 ∫(0 to 1) ∫(0 to 2) 2 * x * y^2 - x^3 * y^2 dy dx
+
+Now integrate it with respect to y:
+E[XY] = 3/10 ∫(0 to 1) ((2xy^3/3) - (x^3y^3/3))|(0,2) dx
+E[XY] = 3/10 ∫(0 to 1) ((16x/3) - (8x^3/3)) dx
+E[XY] = 3/10 ∫(0 to 1) (x(16-8x^2))/3 dx
+E[XY] = 1/10 ∫(0 to 1) (16x - 8x^3) dx
+
+Now integrate it with respect to x:
+E[XY] = 1/10 (8x^2 - 2x^4)|(0,1)
+E[XY] = 1/10(8-2)
+E[XY] = 3/5

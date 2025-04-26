@@ -1,0 +1,12 @@
+1. From the Q3.1, we found out that Y_n converges in probability to λ^2/3.
+
+2. By using continous mapping theorem, we can let g be a continuous function and X_n be a sequence of random variables that converges in probability to X.
+
+3. Then g(X_n) coverges in probability to g(X)
+
+4. Again, since Y_n converges in probability to λ^2/3, we can apply the continuous mapping theorem and we get Z_n = squrare root of Y_n, which is:
+
+Z_n = square root of λ^2/3
+Z_n = λ/square root of 3
+
+5. Therefore, Z_n converges in probability to λ/square root of 3, and that is the probability limit of Z_n.

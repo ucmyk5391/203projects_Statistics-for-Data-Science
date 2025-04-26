@@ -1,0 +1,130 @@
+---
+title: "Unit 12 Live Session: The Classical Linear Model"
+output: 'pdf_document'  
+classoption: landscape
+fontsize: 12pt
+---
+
+```{r setup, include=FALSE, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(car)
+library(lmtest)
+library(sandwich)
+library(stargazer)
+```
+
+
+![Cartoon](./images/cartoon.png){width=50%}
+
+
+# Class Announcements
+
+- Schedule of Deliverables
+  - Today: Research Proposal, Explanation Homework
+  - Week 13: CLM Homework
+  - Week 14: Final Report, Final Presentation (in live session), Within-Team Review
+
+# Roadmap
+
+## Rearview Mirror
+
+- Statisticians create a population model to represent the world.
+- The BLP is a useful summary for a relationship among random variables.
+- OLS regression is an estimator for the Best Linear Predictor (BLP).
+- For a large sample, we only need two mild assumptions to work with OLS
+    - To know coefficients are consistent
+    - To have valid standard errors, hypothesis tests
+
+## Today
+
+- The Classical Linear Model (CLM) allows us to apply regression to smaller samples.
+- The CLM requires more to be true of the data generating process, to make coefficients, standard errors, and tests *meaningful* in small samples. 
+- Understanding if the data meets these requirements (often called assumptions) requires considerable care.
+
+## Looking Ahead
+
+- The CLM -- and the methods that we use to evaluate the CLM -- are the basis of advanced models (*inter alia* time-series)
+- (Week 13) In a regression studies (and other studies), false discovery is a widespread problem.  Understanding its causes can make you a better member of the scientific community.
+
+\newpage 
+
+# The Classical Linear Model     
+
+In small samples, more assumptions need to be true for OLS regression to "work." 
+  - What do we mean when we say "work"? 
+
+
+# Problems with the CLM Requirements 
+
+- For each CLM assumption, identify one **concrete** way that the data might not satisfy the requirement. 
+
+1. IID Sampling 
+    a. example: A violation is a dependency among datapoints. There could be geographical clustering.
+2. Linear Conditional Expectation 
+3. No Perfect Collinearity
+4. Homoskedastic Errors 
+5. Normally Distributed Errors
+  
+  
+## Comparing the Large Sample Model and the CLM
+
+Suppose that you're interested in understanding how subsidized school meals benefit under-resourced students.
+  - Using the tools from 201, refine this question to a data science question.
+Suppose that to answer the question you have identified, there are two data sources:
+    - Data on 34,500 students, recording income, nutrition and test scores, self-reported by individual families who have opted in to the study.  
+    - Government data about 76 school districts, including district-level college achievement; county-level home prices, and state-level tax receipts.
+
+1. Suppose you use individual-level data (you have a large sample).  
+    - Which of the large-sample assumptions do you expect are valid, and which are problematic?
+    
+    
+2. Say you use school-district-level data (you have a small sample).
+    - Which of the CLM assumptions do you expect are valid, and which do you expect are most problematic?
+    
+    
+3. Which dataset do you think will give you more precise estimates?
+
+4. Which dataset would you choose?
+
+
+  
+
+\newpage  
+
+# R Exercise
+
+If you haven't used the `mtcars` dataset, you haven't been through an intro applied stats class! 
+
+In this analysis, we will use the mtcars dataset which is a dataset that was extracted from the 1974 Motor Trend US magazine, and comprises fuel consumption and 10 aspects of automobile design and performance for 32 automobiles (1973-74 models). The dataset is automatically available when you start R.  For more information about the dataset, use the R command: help(mtcars)
+
+```{r load-data, message=FALSE}
+data(mtcars)
+
+glimpse(mtcars)
+```
+
+1. Using the mtcars data, run a multiple linear regression to find the relationship between displacement (`disp`), gross horsepower (`hp`), weight (`wt`), and rear axle ratio (`drat`) on the miles per gallon (`mpg`).
+
+```{r}
+
+```
+
+2. For **each** of the following CLM assumptions, assess whether the assumption holds.  Where possible, demonstrate multiple ways of assessing an assumption.  When an assumption appears violated, state what steps you would take in response.
+
+- I.I.D. data
+- Linear conditional expectation
+- No perfect collinearity
+- Homoskedastic errors
+- Normally distributed errors
+
+3. In addition to the above, assess to what extent (imperfect) collinearity is affecting your inference. 
+
+4. Interpret the coefficient on horsepower. 
+
+\newpage 
+
+5. Perform a hypothesis test to assess whether rear axle ratio has an effect on mpg. What assumptions need to be true for this hypothesis test to be informative? Are they? 
+
+6. Choose variable transformations (if any) for each variable, and try to better meet the assumptions of the CLM (which also maintaining the readability of your model).
+
+7. (As time allows) report the results of both models in a nicely formatted regression table.

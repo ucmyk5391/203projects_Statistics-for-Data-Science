@@ -1,0 +1,10 @@
+If the product of their marginal PDFs = joint PDF, it means they are independent.
+
+Marginal PDFs:
+fX(x) = 3/5 * (2 - x^2)
+fY(y) = y/2
+
+If we multiply fX(x) and fY(y) = (3/5 * (2 - x^2)) * (y/2)
+                               = 3/10 * (2 - x^2) * y = joint PDF we found earlier.
+
+Therefore, they are independent.
